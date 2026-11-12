@@ -1,0 +1,24 @@
+<div class="client-container">
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="nav-left navbar-brand"><span class="brand-icon">🛒</span><h1>{{ t('storeTitle') }}</h1></div>
+      <div class="nav-center">
+        <a [class.active]="activeTab === 'products'" class="nav-pill" [routerLink]="['/client','products']"><span class="nav-pill-icon">🛍️</span>{{ t('tabProducts') }}</a>
+        <a [class.active]="activeTab === 'cart'" class="nav-pill" [routerLink]="['/client','cart']"><span class="nav-pill-icon">🛒</span>{{ t('tabCart') }}<span class="cart-badge" *ngIf="cart.length > 0">{{ cart.length }}</span></a>
+        <a [class.active]="activeTab === 'orders'" class="nav-pill" [routerLink]="['/client','orders']"><span class="nav-pill-icon">📦</span>{{ t('tabOrders') }}</a>
+      </div>
+      <div class="nav-right">
+        <div class="dropdown nav-dropdown language-dropdown"><button type="button" class="nav-action-btn language-trigger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('changeLanguage')"><mat-icon class="nav-action-icon" aria-hidden="true">public</mat-icon><span class="nav-action-label">{{ selectedLanguage.toUpperCase() }}</span><mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon></button><ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-language-dropdown"><li *ngFor="let language of languageOptions"><button type="button" class="dropdown-item app-dropdown-item" (click)="onLanguageChange(language.code)" [class.active-language]="selectedLanguage === language.code"><span class="language-flag">{{ getFlag(language.code) }}</span><span class="language-native">{{ language.nativeLabel }}</span><span class="language-menu-spacer"></span><span *ngIf="selectedLanguage === language.code" class="language-check-icon">✓</span></button></li></ul></div>
+        <div class="dropdown nav-dropdown profile-dropdown"><button class="nav-action-btn profile-trigger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('profile')"><span class="user-avatar">👤</span><span class="nav-action-label user-display-name">{{ currentUser?.name }}</span><mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon></button><ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-user-dropdown"><li class="dropdown-header user-menu-header"><span class="user-avatar large">👤</span><div class="user-info"><div class="user-name">{{ currentUser?.name }}</div><div class="user-email">{{ currentUser?.email }}</div></div></li><li><button type="button" class="dropdown-item app-dropdown-item" (click)="goToProfile()"><span class="dropdown-item-icon">👤</span><span>{{ t('profile') }}</span></button></li><li><button type="button" class="dropdown-item app-dropdown-item" (click)="goToEditProfile()"><span class="dropdown-item-icon">✏️</span><span>Modifier le profil</span></button></li><li><hr class="dropdown-divider"></li><li><button type="button" class="dropdown-item app-dropdown-item logout-item" (click)="logout()"><span class="dropdown-item-icon">🚪</span><span>{{ t('logout') }}</span></button></li></ul></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content-section">
+    <div class="section-header"><h2><span class="section-icon">📦</span>{{ t('ordersHistoryTitle') }}</h2></div>
+    <div *ngIf="orders.length === 0" class="empty-state-container"><div class="empty-state"><span class="empty-icon">📦</span><h3>{{ t('noOrdersTitle') }}</h3><p>{{ t('noOrdersHint') }}</p><button (click)="goToProducts()" class="btn btn-primary"><span class="btn-icon">🛍️</span>{{ t('startShopping') }}</button></div></div>
+    <div class="orders-list" *ngIf="orders.length > 0"><div *ngFor="let order of orders" class="order-card"><div class="order-header"><div class="order-id"><span class="id-label">{{ t('orderLabel') }}</span><span class="id-value">#{{ order.id }}</span></div><span [class]="'badge badge-' + order.status">{{ getOrderStatusLabel(order.status) }}</span></div><div class="order-body"><div class="order-info"><div class="info-row"><span class="info-icon">💰</span><span class="info-label">{{ t('amountLabel') }}</span><span class="info-value">{{ order.totalAmount | currency }}</span></div><div class="info-row"><span class="info-icon">📅</span><span class="info-label">{{ t('dateLabel') }}</span><span class="info-value">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span></div></div><details class="order-details"><summary>{{ getOrderItemsSummary(order.items.length || 0) }}</summary><ul class="items-list"><li *ngFor="let item of order.items" class="order-item"><img class="order-item-image" [src]="getItemImage(item)" [alt]="item.productName" /><span class="item-name">{{ item.productName }}</span><span class="item-quantity">x{{ item.quantity }}</span></li></ul></details></div></div></div>
+  </div>
+
+  <app-site-footer></app-site-footer>
+</div>

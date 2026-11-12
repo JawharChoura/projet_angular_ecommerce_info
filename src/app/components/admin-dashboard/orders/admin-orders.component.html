@@ -1,0 +1,184 @@
+<div class="admin-container">
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="nav-left navbar-brand">
+        <span class="brand-icon">🛒</span>
+        <h1>{{ t('adminDashboard') }}</h1>
+      </div>
+      <div class="nav-center">
+        <a [class.active]="activeTab === 'orders'" class="nav-pill" [routerLink]="['/admin','orders']">
+          <span class="nav-pill-icon">📦</span>
+          {{ t('tabOrders') }}
+        </a>
+        <a [class.active]="activeTab === 'products'" class="nav-pill" [routerLink]="['/admin','products']">
+          <span class="nav-pill-icon">📋</span>
+          {{ t('tabProducts') }}
+        </a>
+        <a [class.active]="activeTab === 'categories'" class="nav-pill" [routerLink]="['/admin','categories']">
+          <span class="nav-pill-icon">📁</span>
+          {{ t('tabCategories') }}
+        </a>
+      </div>
+      <div class="nav-right">
+        <div class="dropdown nav-dropdown language-dropdown">
+          <button type="button" class="nav-action-btn language-trigger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('changeLanguage')">
+            <mat-icon class="nav-action-icon" aria-hidden="true">public</mat-icon>
+            <span class="nav-action-label">{{ selectedLanguage.toUpperCase() }}</span>
+            <mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-language-dropdown">
+            <li *ngFor="let language of languageOptions">
+              <button type="button" class="dropdown-item app-dropdown-item" (click)="onLanguageChange(language.code)" [class.active-language]="selectedLanguage === language.code">
+                <span class="language-flag">{{ getFlag(language.code) }}</span>
+                <span class="language-native">{{ language.nativeLabel }}</span>
+                <span class="language-menu-spacer"></span>
+                <span *ngIf="selectedLanguage === language.code" class="language-check-icon">✓</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dropdown nav-dropdown profile-dropdown">
+          <button class="nav-action-btn profile-trigger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('profile')">
+            <span class="user-avatar">👤</span>
+            <span class="nav-action-label user-display-name">{{ currentUser?.name }}</span>
+            <mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-user-dropdown">
+            <li class="dropdown-header user-menu-header">
+              <span class="user-avatar large">👤</span>
+              <div class="user-info">
+                <div class="user-name">{{ currentUser?.name }}</div>
+                <div class="user-email">{{ currentUser?.email }}</div>
+              </div>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item app-dropdown-item" (click)="goToProfile()">
+                <span class="dropdown-item-icon">👤</span>
+                <span>{{ t('profile') }}</span>
+              </button>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <button type="button" class="dropdown-item app-dropdown-item logout-item" (click)="logout()">
+                <span class="dropdown-item-icon">🚪</span>
+                <span>{{ t('logout') }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Statistics Dashboard -->
+  <div class="statistics-section">
+    <div class="stats-grid">
+      <div class="stat-card stat-card-blue">
+        <div class="stat-icon">📦</div>
+        <div class="stat-content">
+          <h3>{{ getTotalOrders() }}</h3>
+          <p>Total Commandes</p>
+        </div>
+      </div>
+      <div class="stat-card stat-card-green">
+        <div class="stat-icon">💰</div>
+        <div class="stat-content">
+          <h3>{{ getTotalRevenue() | currency }}</h3>
+          <p>Revenu Total</p>
+        </div>
+      </div>
+      <div class="stat-card stat-card-orange">
+        <div class="stat-icon">📋</div>
+        <div class="stat-content">
+          <h3>{{ getTotalProducts() }}</h3>
+          <p>Total Produits</p>
+        </div>
+      </div>
+      <div class="stat-card stat-card-purple">
+        <div class="stat-icon">📁</div>
+        <div class="stat-content">
+          <h3>{{ getTotalCategories() }}</h3>
+          <p>Catégories</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-stats">
+      <div class="quick-stat">
+        <span class="quick-stat-icon">⏳</span>
+        <span class="quick-stat-label">{{ t('quickPending') }}</span>
+        <span class="quick-stat-value">{{ getPendingOrders() }}</span>
+      </div>
+      <div class="quick-stat">
+        <span class="quick-stat-icon">⚠️</span>
+        <span class="quick-stat-label">{{ t('quickLowStock') }}</span>
+        <span class="quick-stat-value">{{ getLowStockProducts() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION COMMANDES -->
+  <div class="content-section">
+    <div class="section-header">
+      <h2>
+        <span class="section-icon">📦</span>
+        {{ t('ordersManagement') }}
+      </h2>
+    </div>
+
+    <!-- Charts and Table Container -->
+    <div class="orders-container">
+      <!-- Pie Chart -->
+      <div class="chart-container">
+        <div class="chart-wrapper">
+          <h3 class="chart-title">Répartition des Commandes par Statut</h3>
+          <canvas 
+            baseChart
+            type="pie"
+            [data]="pieChartData"
+            [options]="pieChartOptions">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="table-section">
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>{{ t('thUser') }}</th>
+                <th>{{ t('thAmount') }}</th>
+                <th>{{ t('thStatus') }}</th>
+                <th>{{ t('thDate') }}</th>
+                <th>{{ t('thAction') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of orders">
+                <td><span class="id-badge">#{{ order.id }}</span></td>
+                <td class="order-user-cell">
+                  <span class="order-user-name">{{ getOrderUserName(order.userId) }}</span>
+                  <span class="order-user-contact">{{ getOrderUserContact(order.userId) }}</span>
+                </td>
+                <td class="amount">{{ order.totalAmount | currency }}</td>
+                <td><span [class]="'badge badge-' + order.status">{{ getOrderStatusLabel(order.status) }}</span></td>
+                <td>{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  <button *ngIf="order.status === 'pending'" (click)="confirmOrder(order)" class="btn btn-sm btn-success">✓ {{ t('actionConfirm') }}</button>
+                  <span *ngIf="order.status !== 'pending'" class="text-confirmed">{{ t('actionProcessed') }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <app-site-footer></app-site-footer>
+</div>

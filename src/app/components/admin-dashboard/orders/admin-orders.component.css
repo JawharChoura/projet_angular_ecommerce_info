@@ -1,0 +1,79 @@
+@import '../admin-dashboard.component.css';
+
+/* Orders Container with Chart and Table */
+.orders-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+/* Chart Container */
+.chart-container {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-title {
+  text-align: center;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chart-wrapper canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Table Section */
+.table-section {
+  grid-column: 2;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .orders-container {
+    grid-template-columns: 1fr;
+  }
+
+  .table-section {
+    grid-column: 1;
+  }
+
+  .chart-container {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .orders-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .chart-title {
+    font-size: 14px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+}

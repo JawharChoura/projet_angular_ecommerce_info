@@ -1,0 +1,67 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
+import { ProductService } from '../../../services/product.service';
+import { CategoryService } from '../../../services/category.service';
+import { OrderService } from '../../../services/order.service';
+import { Product } from '../../../models/Product';
+import { Category } from '../../../models/Category';
+import { Order } from '../../../models/Order';
+import { User } from '../../../models/User';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { LanguageService, SupportedLanguage, UiLanguageOption } from '../../../services/language.service';
+
+@Component({
+  selector: 'app-client-orders',
+  templateUrl: './client-orders.component.html',
+  styleUrls: ['./client-orders.component.css']
+})
+export class ClientOrdersComponent implements OnInit, OnDestroy {
+  activeTab = 'orders';
+  products: Product[] = [];
+  categories: Category[] = [];
+  orders: Order[] = [];
+  cart: any[] = [];
+  currentUser: User | null = null;
+  languageOptions: UiLanguageOption[] = [];
+  selectedLanguage: SupportedLanguage = 'fr';
+  private destroy$ = new Subject<void>();
+
+  private readonly labels: Record<SupportedLanguage, Record<string, string>> = {
+    fr: { storeTitle: 'E-Commerce Informatique', profile: 'Voir le profil', changeLanguage: 'Changer la langue', logout: 'Deconnexion', tabProducts: 'Produits', tabCart: 'Panier', tabOrders: 'Mes Commandes', productsCatalog: 'Catalogue de Produits', searchLabel: 'Recherche par nom', categoryLabel: 'Filtrer par categorie', allCategories: 'Toutes les categories', searchPlaceholder: 'Rechercher par nom du produit...', productFound: 'produit trouve', productsFound: 'produits trouves', noProductsTitle: 'Aucun produit trouve', noProductsHint: 'Essayez de modifier vos filtres', searchClear: 'Effacer la recherche', addToCart: 'Ajouter', unavailable: 'Indisponible', stockLabel: 'en stock', orderStatusPending: 'En attente', orderStatusConfirmed: 'Confirmee', orderStatusShipped: 'Expediee', orderStatusDelivered: 'Livree', orderStatusCancelled: 'Annulee', cartSectionTitle: 'Mon Panier', cartEmpty: 'Votre panier est vide', cartEmptyHint: 'Decouvrez nos produits et ajoutez-les a votre panier', discoverProducts: 'Decouvrir nos produits', cartThProduct: 'Produit', cartThUnitPrice: 'Prix unitaire', cartThQuantity: 'Quantite', cartThSubtotal: 'Sous-total', cartThAction: 'Action', removeItem: 'Supprimer', orderSummaryTitle: 'Resume de la commande', summarySubtotal: 'Sous-total', shippingFee: 'Frais de port', shippingFree: 'Gratuit', summaryTotalTtc: 'Total TTC', validateOrder: 'Valider la commande', ordersHistoryTitle: 'Historique des commandes', noOrdersTitle: 'Aucune commande', noOrdersHint: 'Vous n\'avez pas encore passe de commandes', startShopping: 'Commencer mes achats', orderLabel: 'Commande', amountLabel: 'Montant:', dateLabel: 'Date:', viewItems: 'Voir les articles', mustBeConnected: 'Vous devez etre connecte', orderCreated: 'Commande creee avec succes', productAdded: 'Produit ajoute au panier' },
+    en: { storeTitle: 'IT E-Commerce', profile: 'View profile', changeLanguage: 'Change language', logout: 'Logout', tabProducts: 'Products', tabCart: 'Cart', tabOrders: 'My Orders', productsCatalog: 'Product Catalog', searchLabel: 'Search by name', categoryLabel: 'Filter by category', allCategories: 'All categories', searchPlaceholder: 'Search product by name...', productFound: 'product found', productsFound: 'products found', noProductsTitle: 'No products found', noProductsHint: 'Try adjusting your filters', searchClear: 'Clear search', addToCart: 'Add', unavailable: 'Unavailable', stockLabel: 'in stock', orderStatusPending: 'Pending', orderStatusConfirmed: 'Confirmed', orderStatusShipped: 'Shipped', orderStatusDelivered: 'Delivered', orderStatusCancelled: 'Cancelled', cartSectionTitle: 'My Cart', cartEmpty: 'Your cart is empty', cartEmptyHint: 'Explore our products and add them to your cart', discoverProducts: 'Browse products', cartThProduct: 'Product', cartThUnitPrice: 'Unit price', cartThQuantity: 'Quantity', cartThSubtotal: 'Subtotal', cartThAction: 'Action', removeItem: 'Remove', orderSummaryTitle: 'Order summary', summarySubtotal: 'Subtotal', shippingFee: 'Shipping fee', shippingFree: 'Free', summaryTotalTtc: 'Total incl. tax', validateOrder: 'Place order', ordersHistoryTitle: 'Order history', noOrdersTitle: 'No orders yet', noOrdersHint: 'You have not placed any orders yet', startShopping: 'Start shopping', orderLabel: 'Order', amountLabel: 'Amount:', dateLabel: 'Date:', viewItems: 'View items', mustBeConnected: 'You must be logged in', orderCreated: 'Order created successfully', productAdded: 'Product added to cart' },
+    es: { storeTitle: 'E-Commerce de Informatica', profile: 'Ver perfil', changeLanguage: 'Cambiar idioma', logout: 'Cerrar sesion', tabProducts: 'Productos', tabCart: 'Carrito', tabOrders: 'Mis Pedidos', productsCatalog: 'Catalogo de Productos', searchLabel: 'Buscar por nombre', categoryLabel: 'Filtrar por categoria', allCategories: 'Todas las categorias', searchPlaceholder: 'Buscar producto por nombre...', productFound: 'producto encontrado', productsFound: 'productos encontrados', noProductsTitle: 'No se encontraron productos', noProductsHint: 'Pruebe a cambiar los filtros', searchClear: 'Borrar busqueda', addToCart: 'Agregar', unavailable: 'No disponible', stockLabel: 'en stock', orderStatusPending: 'Pendiente', orderStatusConfirmed: 'Confirmado', orderStatusShipped: 'Enviado', orderStatusDelivered: 'Entregado', orderStatusCancelled: 'Cancelado', cartSectionTitle: 'Mi Carrito', cartEmpty: 'Su carrito esta vacio', cartEmptyHint: 'Descubra nuestros productos y agreguelos a su carrito', discoverProducts: 'Descubrir productos', cartThProduct: 'Producto', cartThUnitPrice: 'Precio unitario', cartThQuantity: 'Cantidad', cartThSubtotal: 'Subtotal', cartThAction: 'Accion', removeItem: 'Eliminar', orderSummaryTitle: 'Resumen del pedido', summarySubtotal: 'Subtotal', shippingFee: 'Gastos de envio', shippingFree: 'Gratis', summaryTotalTtc: 'Total con impuestos', validateOrder: 'Confirmar pedido', ordersHistoryTitle: 'Historial de pedidos', noOrdersTitle: 'Sin pedidos', noOrdersHint: 'Todavia no ha realizado pedidos', startShopping: 'Comenzar compras', orderLabel: 'Pedido', amountLabel: 'Importe:', dateLabel: 'Fecha:', viewItems: 'Ver articulos', mustBeConnected: 'Debe iniciar sesion', orderCreated: 'Pedido creado con exito', productAdded: 'Producto agregado al carrito' },
+    ar: { storeTitle: 'متجر التكنولوجيا', profile: 'عرض الملف الشخصي', changeLanguage: 'تغيير اللغة', logout: 'تسجيل الخروج', tabProducts: 'المنتجات', tabCart: 'السلة', tabOrders: 'طلباتي', productsCatalog: 'كتالوج المنتجات', searchLabel: 'بحث بالاسم', categoryLabel: 'تصفية حسب الفئة', allCategories: 'كل الفئات', searchPlaceholder: 'ابحث عن المنتج بالاسم...', productFound: 'منتج موجود', productsFound: 'منتجات موجودة', noProductsTitle: 'لا توجد منتجات', noProductsHint: 'حاول تعديل الفلاتر', searchClear: 'مسح البحث', addToCart: 'اضافة', unavailable: 'غير متاح', stockLabel: 'في المخزون', orderStatusPending: 'معلق', orderStatusConfirmed: 'مؤكد', orderStatusShipped: 'تم الشحن', orderStatusDelivered: 'تم التسليم', orderStatusCancelled: 'ملغي', cartSectionTitle: 'سلتي', cartEmpty: 'السلة فارغة', cartEmptyHint: 'اكتشف منتجاتنا واضفها الى السلة', discoverProducts: 'اكتشف المنتجات', cartThProduct: 'المنتج', cartThUnitPrice: 'سعر الوحدة', cartThQuantity: 'الكمية', cartThSubtotal: 'الاجمالي الفرعي', cartThAction: 'الاجراء', removeItem: 'حذف', orderSummaryTitle: 'ملخص الطلب', summarySubtotal: 'الاجمالي الفرعي', shippingFee: 'رسوم الشحن', shippingFree: 'مجاني', summaryTotalTtc: 'الاجمالي شامل الضريبة', validateOrder: 'تأكيد الطلب', ordersHistoryTitle: 'سجل الطلبات', noOrdersTitle: 'لا توجد طلبات', noOrdersHint: 'لم تقم باي طلب بعد', startShopping: 'ابدأ التسوق', orderLabel: 'طلب', amountLabel: 'المبلغ:', dateLabel: 'التاريخ:', viewItems: 'عرض العناصر', mustBeConnected: 'يجب تسجيل الدخول', orderCreated: 'تم انشاء الطلب بنجاح', productAdded: 'تمت اضافة المنتج الى السلة' }
+  };
+
+  constructor(private authService: AuthService, private router: Router, private productService: ProductService, private categoryService: CategoryService, private orderService: OrderService, private languageService: LanguageService) {}
+
+  ngOnInit(): void { this.languageOptions = this.languageService.getLanguageOptions(); this.selectedLanguage = this.languageService.getCurrentLanguage(); this.languageService.activeLanguage$.pipe(takeUntil(this.destroy$)).subscribe(language => this.selectedLanguage = language); this.currentUser = this.authService.getCurrentUser(); this.loadProducts(); this.loadCategories(); this.loadOrders(); this.loadCart(); }
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
+  getFlag(code: SupportedLanguage): string { switch (code) { case 'fr': return '🇫🇷'; case 'en': return '🇬🇧'; case 'es': return '🇪🇸'; case 'ar': return '🇸🇦'; default: return '🌐'; } }
+  onLanguageChange(language: SupportedLanguage): void { this.languageService.setLanguage(language); }
+  getSelectedLanguageLabel(): string { return this.languageOptions.find(option => option.code === this.selectedLanguage)?.nativeLabel || this.selectedLanguage.toUpperCase(); }
+  t(key: string): string { return this.labels[this.selectedLanguage][key] ?? this.labels.fr[key] ?? key; }
+  getOrderStatusLabel(status: Order['status']): string { const map: Record<Order['status'], string> = { pending: this.t('orderStatusPending'), confirmed: this.t('orderStatusConfirmed'), shipped: this.t('orderStatusShipped'), delivered: this.t('orderStatusDelivered'), cancelled: this.t('orderStatusCancelled') }; return map[status] || status; }
+  getOrderItemsSummary(itemsCount: number): string { return `${this.t('viewItems')} (${itemsCount || 0})`; }
+  loadProducts(): void { this.productService.getProducts().pipe(takeUntil(this.destroy$)).subscribe(data => this.products = data, error => console.error('Error loading products:', error)); }
+  loadCategories(): void { this.categoryService.getCategories().pipe(takeUntil(this.destroy$)).subscribe(data => this.categories = data, error => console.error('Error loading categories:', error)); }
+  loadOrders(): void { if (this.currentUser) { this.orderService.getOrdersByUser(this.currentUser.id).pipe(takeUntil(this.destroy$)).subscribe(data => this.orders = data, error => console.error('Error loading orders:', error)); } }
+  loadCart(): void { const cartData = localStorage.getItem('cart'); this.cart = cartData ? JSON.parse(cartData) : []; }
+  getItemImage(item: any): string { const itemImage = typeof item?.image === 'string' ? item.image.trim() : ''; if (itemImage) return itemImage; const product = this.products.find(current => String(current.id) === String(item?.productId)); const productImage = typeof product?.image === 'string' ? product.image.trim() : ''; return productImage || 'https://via.placeholder.com/88x88?text=Image'; }
+  removeFromCart(productId: number): void { this.cart = this.cart.filter(item => item.productId !== productId); localStorage.setItem('cart', JSON.stringify(this.cart)); }
+  updateQuantity(productId: number, quantity: any): void { const item = this.cart.find(item => item.productId === productId); const numQuantity = parseInt(quantity, 10); if (item && numQuantity > 0) item.quantity = numQuantity; localStorage.setItem('cart', JSON.stringify(this.cart)); }
+  getCartTotal(): number { return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0); }
+  checkout(): void { if (this.cart.length === 0) { alert(this.t('cartEmpty')); return; } if (!this.currentUser) { alert(this.t('mustBeConnected')); return; } const newOrder: Order = { userId: this.currentUser.id, status: 'pending', totalAmount: this.getCartTotal(), items: this.cart, createdAt: new Date() }; this.orderService.createOrder(newOrder).subscribe(() => { this.cart = []; localStorage.removeItem('cart'); this.loadOrders(); alert(this.t('orderCreated')); }, error => console.error('Error creating order:', error)); }
+  goToProducts(): void { this.router.navigate(['/client', 'products']); }
+  getTotalOrders(): number { return this.orders.length; }
+  getTotalRevenue(): number { return this.orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0); }
+  getPendingOrders(): number { return this.orders.filter(order => order.status === 'pending').length; }
+  getTotalProducts(): number { return this.products.length; }
+  getTotalCategories(): number { return this.categories.length; }
+  getLowStockProducts(): number { return this.products.filter(product => product.stock < 5).length; }
+  goToProfile(): void { this.router.navigate(['/profile']); }
+  goToEditProfile(): void { this.router.navigate(['/edit-profile']); }
+  logout(): void { if (confirm('Voulez-vous vraiment vous deconnecter ?')) { this.authService.logout(); this.router.navigate(['/login']); } }
+}

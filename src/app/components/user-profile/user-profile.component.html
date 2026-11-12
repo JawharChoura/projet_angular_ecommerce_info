@@ -1,0 +1,107 @@
+<div class="profile-container">
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="nav-left navbar-brand">
+        <span class="brand-icon">👤</span>
+        <h1>Mon Profil</h1>
+      </div>
+      <div class="nav-center">
+        <span class="nav-center-title">Compte & Activite</span>
+      </div>
+      <div class="nav-right nav-buttons">
+        <button (click)="goToEditProfile()" class="btn btn-warning btn-sm d-flex align-items-center gap-2">
+          <mat-icon class="btn-icon-mat" aria-hidden="true">edit</mat-icon>
+          <span>Modifier</span>
+        </button>
+        <button (click)="goBack()" class="btn btn-primary btn-sm d-flex align-items-center gap-2">
+          <mat-icon class="btn-icon-mat" aria-hidden="true">arrow_back</mat-icon>
+          <span>Retour</span>
+        </button>
+        <button (click)="logout()" class="btn btn-danger btn-sm d-flex align-items-center gap-2">
+          <mat-icon class="btn-icon-mat" aria-hidden="true">logout</mat-icon>
+          <span>Déconnexion</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="profile-content">
+    <div *ngIf="currentUser" class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <span class="avatar-icon">👤</span>
+        </div>
+        <div class="profile-info">
+          <h2>{{ currentUser.name }}</h2>
+          <div class="user-details">
+            <div class="detail-item">
+              <span class="detail-label">📧 Email:</span>
+              <span class="detail-value">{{ currentUser.email }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">🔐 Rôle:</span>
+              <span class="detail-value role-badge" [class]="'role-' + currentUser.role">
+                {{ currentUser.role === 'admin' ? '👨‍💼 Administrateur' : '🛍️ Client' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="orders-section">
+      <div class="section-header">
+        <h3>
+          <span class="section-icon">📦</span>
+          Mes Commandes
+        </h3>
+        <span class="badge" *ngIf="userOrders.length > 0">{{ userOrders.length }}</span>
+      </div>
+
+      <div *ngIf="loading" class="loading">
+        <span class="loading-spinner">⏳</span>
+        Chargement des commandes...
+      </div>
+
+      <div *ngIf="!loading && userOrders.length === 0" class="no-orders">
+        <div class="empty-state">
+          <span class="empty-icon">📦</span>
+          <h4>Aucune commande</h4>
+          <p>Vous n'avez pas encore passé de commande</p>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && userOrders.length > 0" class="orders-list">
+        <div *ngFor="let order of userOrders" class="order-item">
+          <div class="order-header">
+            <div class="order-id">
+              <span class="order-label">Commande #{{ order.id }}</span>
+              <span class="order-status" [ngClass]="getOrderStatusClass(order.status)">
+                {{ getOrderStatusLabel(order.status) }}
+              </span>
+            </div>
+            <div class="order-meta">
+              <span class="order-date">
+                📅 {{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+              </span>
+              <span class="order-total">
+                💰 {{ order.totalAmount | currency }}
+              </span>
+            </div>
+          </div>
+
+          <div class="order-items" *ngIf="order.items && order.items.length > 0">
+            <div class="items-list">
+              <div *ngFor="let item of order.items" class="item-row">
+                <span class="item-name">{{ item.productName || 'Produit' }}</span>
+                <span class="item-qty">Qté: {{ item.quantity }}</span>
+                <span class="item-price">{{ (item.price || 0) | currency }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

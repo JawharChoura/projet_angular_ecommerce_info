@@ -1,0 +1,117 @@
+<div class="register-container">
+  <app-site-navbar></app-site-navbar>
+  <div class="register-box pro-shadow">
+    <div class="logo-section">
+      <div class="icon">
+        <span class="material-icons" style="font-size:48px;color:var(--pro-primary);">person_add</span>
+      </div>
+      <h1>E-Commerce Informatique</h1>
+      <h2>Créer un Compte Ingénieur</h2>
+    </div>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="on">
+      <div class="form-group">
+        <label for="name">
+          <span class="material-icons icon-label">person</span>
+          Nom Complet
+        </label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          formControlName="name"
+          placeholder="Jean Dupont"
+          [class.is-invalid]="submitted && f['name'].errors"
+          autocomplete="name" />
+        <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+          <div *ngIf="f['name'].errors['required']">Le nom est requis</div>
+          <div *ngIf="f['name'].errors['minlength']">Minimum 3 caractères</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">
+          <span class="material-icons icon-label">mail</span>
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="prenom.nom@entreprise.com"
+          [class.is-invalid]="submitted && f['email'].errors"
+          autocomplete="username" />
+        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+          <div *ngIf="f['email'].errors['required']">L'email est requis</div>
+          <div *ngIf="f['email'].errors['email']">Format d'email invalide</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">
+          <span class="material-icons icon-label">lock</span>
+          Mot de passe
+        </label>
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          formControlName="password"
+          placeholder="••••••••"
+          [class.is-invalid]="submitted && f['password'].errors"
+          autocomplete="new-password" />
+        <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+          <div *ngIf="f['password'].errors['required']">Le mot de passe est requis</div>
+          <div *ngIf="f['password'].errors['minlength']">Minimum 6 caractères</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">
+          <span class="material-icons icon-label">lock_reset</span>
+          Confirmer le mot de passe
+        </label>
+        <input
+          type="password"
+          id="confirmPassword"
+          class="form-control"
+          formControlName="confirmPassword"
+          placeholder="••••••••"
+          [class.is-invalid]="submitted && (f['confirmPassword'].errors || registerForm.errors)"
+          autocomplete="new-password" />
+        <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
+          <div *ngIf="f['confirmPassword'].errors['required']">Veuillez confirmer le mot de passe</div>
+          <div *ngIf="f['confirmPassword'].errors['passwordMismatch']">Les mots de passe ne correspondent pas</div>
+        </div>
+        <div *ngIf="submitted && registerForm.errors?.['passwordMismatch']" class="invalid-feedback">
+          Les mots de passe ne correspondent pas
+        </div>
+      </div>
+      <div class="form-group checkbox">
+        <input
+          type="checkbox"
+          id="acceptTerms"
+          formControlName="acceptTerms"
+          [class.is-invalid]="submitted && f['acceptTerms'].errors" />
+        <label for="acceptTerms" class="checkbox-label">
+          J'accepte les conditions d'utilisation et la politique de confidentialité
+        </label>
+        <div *ngIf="submitted && f['acceptTerms'].errors" class="invalid-feedback">
+          Vous devez accepter les conditions d'utilisation
+        </div>
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        <span class="material-icons alert-icon">error_outline</span>
+        {{ errorMessage }}
+      </div>
+      <div *ngIf="successMessage" class="alert alert-success">
+        <span class="material-icons alert-icon">check_circle</span>
+        {{ successMessage }}
+      </div>
+      <button type="submit" [disabled]="loading" class="btn btn-primary pro-btn">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+        {{ loading ? 'Création du compte...' : 'Créer un Compte' }}
+      </button>
+    </form>
+    <div class="login-link">
+      <p>Vous avez déjà un compte ? <a (click)="goToLogin()" class="link">Se connecter</a></p>
+    </div>
+  </div>
+</div>

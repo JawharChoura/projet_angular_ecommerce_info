@@ -1,0 +1,29 @@
+<div class="client-container">
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="nav-left navbar-brand"><span class="brand-icon">🛒</span><h1>{{ t('storeTitle') }}</h1></div>
+      <div class="nav-center">
+        <a [class.active]="activeTab === 'products'" class="nav-pill" [routerLink]="['/client','products']"><span class="nav-pill-icon">🛍️</span>{{ t('tabProducts') }}</a>
+        <a [class.active]="activeTab === 'cart'" class="nav-pill" [routerLink]="['/client','cart']"><span class="nav-pill-icon">🛒</span>{{ t('tabCart') }}<span class="cart-badge" *ngIf="cart.length > 0">{{ cart.length }}</span></a>
+        <a [class.active]="activeTab === 'orders'" class="nav-pill" [routerLink]="['/client','orders']"><span class="nav-pill-icon">📦</span>{{ t('tabOrders') }}</a>
+      </div>
+      <div class="nav-right">
+        <div class="dropdown nav-dropdown language-dropdown"><button type="button" class="nav-action-btn language-trigger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('changeLanguage')"><mat-icon class="nav-action-icon" aria-hidden="true">public</mat-icon><span class="nav-action-label">{{ selectedLanguage.toUpperCase() }}</span><mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon></button><ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-language-dropdown"><li *ngFor="let language of languageOptions"><button type="button" class="dropdown-item app-dropdown-item" (click)="onLanguageChange(language.code)" [class.active-language]="selectedLanguage === language.code"><span class="language-flag">{{ getFlag(language.code) }}</span><span class="language-native">{{ language.nativeLabel }}</span><span class="language-menu-spacer"></span><span *ngIf="selectedLanguage === language.code" class="language-check-icon">✓</span></button></li></ul></div>
+        <div class="dropdown nav-dropdown profile-dropdown"><button class="nav-action-btn profile-trigger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('profile')"><span class="user-avatar">👤</span><span class="nav-action-label user-display-name">{{ currentUser?.name }}</span><mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon></button><ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-user-dropdown"><li class="dropdown-header user-menu-header"><span class="user-avatar large">👤</span><div class="user-info"><div class="user-name">{{ currentUser?.name }}</div><div class="user-email">{{ currentUser?.email }}</div></div></li><li><button type="button" class="dropdown-item app-dropdown-item" (click)="goToProfile()"><span class="dropdown-item-icon">👤</span><span>{{ t('profile') }}</span></button></li><li><button type="button" class="dropdown-item app-dropdown-item" (click)="goToEditProfile()"><span class="dropdown-item-icon">✏️</span><span>Modifier le profil</span></button></li><li><hr class="dropdown-divider"></li><li><button type="button" class="dropdown-item app-dropdown-item logout-item" (click)="logout()"><span class="dropdown-item-icon">🚪</span><span>{{ t('logout') }}</span></button></li></ul></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content-section">
+    <div class="section-header"><h2><span class="section-icon">🛍️</span>{{ t('productsCatalog') }}</h2></div>
+    <div class="filter-section">
+      <div class="filters-toolbar">
+        <div class="filter-group search-group"><label for="productSearch"><span class="filter-icon">🔎</span>{{ t('searchLabel') }}</label><div class="search-field"><input id="productSearch" type="text" [(ngModel)]="searchTerm" class="form-control search-control" [attr.placeholder]="t('searchPlaceholder')" /><button *ngIf="searchTerm" type="button" (click)="clearSearch()" class="clear-search-btn" [attr.title]="t('searchClear')">✕</button></div></div>
+        <div class="filter-group category-group"><label for="categoryFilter"><span class="filter-icon">🗂️</span>{{ t('categoryLabel') }}</label><select id="categoryFilter" [(ngModel)]="selectedCategory" class="form-control"><option value="0">{{ t('allCategories') }}</option><option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option></select></div>
+      </div>
+      <p class="filter-hint">{{ getFilteredProducts().length }} {{ getProductsFoundLabel() }}</p>
+    </div>
+    <div class="products-grid"><div *ngFor="let product of getFilteredProducts()" class="product-card"><div class="product-image"><img [src]="product.image || 'https://via.placeholder.com/200'" alt="{{ product.name }}" /><div class="product-badge" *ngIf="product.stock < 5 && product.stock > 0">Stock faible</div><div class="product-badge out-of-stock" *ngIf="product.stock === 0">Rupture</div></div><div class="product-info"><h3>{{ product.name }}</h3><p class="description">{{ product.description }}</p><div class="product-footer"><div class="price-section"><span class="price">{{ product.price | currency }}</span><span class="stock-info" [class.low-stock]="product.stock < 5 && product.stock > 0"><span class="stock-icon">📦</span>{{ product.stock }} {{ t('stockLabel') }}</span></div><button [disabled]="product.stock === 0" (click)="addToCart(product)" class="btn btn-add-cart"><span class="btn-icon">{{ product.stock > 0 ? '🛒' : '🚫' }}</span>{{ product.stock > 0 ? t('addToCart') : t('unavailable') }}</button></div></div></div></div>
+    <div *ngIf="getFilteredProducts().length === 0" class="no-products"><div class="empty-state"><span class="empty-icon">📭</span><h3>{{ t('noProductsTitle') }}</h3><p>{{ t('noProductsHint') }}</p></div></div>
+  </div>
+</div>

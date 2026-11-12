@@ -1,0 +1,547 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@test.com",
+      "password": "password123",
+      "name": "Admin User",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "email": "client@test.com",
+      "password": "password123",
+      "name": "Client User",
+      "role": "client"
+    },
+    {
+      "id": "3",
+      "email": "client2@test.com",
+      "password": "password123",
+      "name": "Another Client",
+      "role": "client"
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Ordinateurs Portables",
+      "description": "PC portables professionnels et gaming"
+    },
+    {
+      "id": "2",
+      "name": "Composants PC",
+      "description": "CPU, GPU, RAM et cartes mères"
+    },
+    {
+      "id": "3",
+      "name": "Périphériques",
+      "description": "Claviers, souris, écrans et accessoires"
+    },
+    {
+      "id": "4",
+      "name": "Stockage",
+      "description": "SSD, HDD et solutions NVMe"
+    },
+    {
+      "id": "5",
+      "name": "Audio & Vidéo",
+      "description": "Casques, micros, webcams"
+    },
+    {
+      "id": "6",
+      "name": "Reseau",
+      "description": "Routeurs, switches et adaptateurs"
+    },
+    {
+      "id": "7",
+      "name": "Moniteurs",
+      "description": "Ecrans bureautiques, gaming et ultrawide"
+    },
+    {
+      "id": "8",
+      "name": "Impression",
+      "description": "Imprimantes, scanners et multifonctions"
+    },
+    {
+      "id": "9",
+      "name": "Alimentation",
+      "description": "Onduleurs, multiprises et blocs d'alimentation"
+    },
+    {
+      "id": "10",
+      "name": "Bureautiquee",
+      "description": "Chaises, hubs USB et accessoires de bureau"
+    },
+    {
+      "id": "8f0c",
+      "name": "aaaa",
+      "description": "aaaa"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Laptop Dell XPS 135",
+      "description": "Ultrabook Intel i7, 16GB RAM, 512GB SSD",
+      "price": 1299.99,
+      "categoryId": 1,
+      "stock": 12,
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "2",
+      "name": "MacBook Pro 14",
+      "description": "Apple Silicon, écran Liquid Retina",
+      "price": 2399.99,
+      "categoryId": 1,
+      "stock": 7,
+      "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "3",
+      "name": "AMD Ryzen 9 7950X",
+      "description": "Processeur 16 cœurs / 32 threads",
+      "price": 699.99,
+      "categoryId": 2,
+      "stock": 9,
+      "image": "https://images.unsplash.com/photo-1591799265444-d66432b91588?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "4",
+      "name": "NVIDIA RTX 4080",
+      "description": "Carte graphique 16GB GDDR6X",
+      "price": 1199.99,
+      "categoryId": 2,
+      "stock": 6,
+      "image": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "5",
+      "name": "Clavier mécanique RGB",
+      "description": "Switches hot-swap, format TKL",
+      "price": 139.99,
+      "categoryId": 3,
+      "stock": 20,
+      "image": "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "6",
+      "name": "Souris Logitech MX Master",
+      "description": "Souris ergonomique multi-surface",
+      "price": 99.99,
+      "categoryId": 3,
+      "stock": 18,
+      "image": "https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "7",
+      "name": "SSD Samsung 990 Pro 1TB",
+      "description": "SSD NVMe PCIe 4.0 très haute vitesse",
+      "price": 119.99,
+      "categoryId": 4,
+      "stock": 25,
+      "image": "https://images.unsplash.com/photo-1601737487795-dab272f52420?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "8",
+      "name": "HDD Seagate 4TB",
+      "description": "Disque dur 7200RPM pour sauvegarde",
+      "price": 89.99,
+      "categoryId": 4,
+      "stock": 14,
+      "image": "https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "9",
+      "name": "Casque HyperX Cloud II",
+      "description": "Casque gaming 7.1 surround",
+      "price": 99.99,
+      "categoryId": 5,
+      "stock": 16,
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "10",
+      "name": "Webcam Logitech C920",
+      "description": "Webcam Full HD avec autofocus",
+      "price": 79.99,
+      "categoryId": 5,
+      "stock": 11,
+      "image": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "11",
+      "name": "Routeur Wi-Fi 6 AX3000",
+      "description": "Routeur double bande haut débit",
+      "price": 149.99,
+      "categoryId": 6,
+      "stock": 10,
+      "image": "https://images.unsplash.com/photo-1606904825846-647eb07f5be2?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "12",
+      "name": "Switch 8 ports Gigabit",
+      "description": "Switch compact pour réseau local",
+      "price": 49.99,
+      "categoryId": 6,
+      "stock": 22,
+      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "13",
+      "name": "Moniteur LG UltraWide 34",
+      "description": "Ecran 34 pouces QHD pour productivite et creation",
+      "price": 399.99,
+      "categoryId": 7,
+      "stock": 8,
+      "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "14",
+      "name": "Moniteur Samsung Odyssey G5",
+      "description": "Ecran gaming incurve 27 pouces 165 Hz",
+      "price": 279.99,
+      "categoryId": 7,
+      "stock": 6,
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "15",
+      "name": "Imprimante Epson EcoTank",
+      "description": "Multifonction couleur a reservoir d'encre",
+      "price": 229.99,
+      "categoryId": 8,
+      "stock": 5,
+      "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "16",
+      "name": "Scanner Canon LiDE",
+      "description": "Scanner plat compact pour documents et photos",
+      "price": 89.99,
+      "categoryId": 8,
+      "stock": 12,
+      "image": "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "17",
+      "name": "Onduleur APC 900VA",
+      "description": "Protection contre les coupures et surtensions",
+      "price": 189.99,
+      "categoryId": 9,
+      "stock": 9,
+      "image": "https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "18",
+      "name": "Bloc Alimentation Corsair 750W",
+      "description": "Alimentation modulaire certifiee 80 Plus Gold",
+      "price": 139.99,
+      "categoryId": 9,
+      "stock": 11,
+      "image": "https://images.unsplash.com/photo-1527434003435-4f25d4f9a9f5?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "19",
+      "name": "Chaise Ergonomique Pro",
+      "description": "Support lombaire et accoudoirs reglables",
+      "price": 249.99,
+      "categoryId": 10,
+      "stock": 6,
+      "image": "https://images.unsplash.com/photo-1501045661006-fcebe0257c3f?w=600&h=400&fit=crop"
+    },
+    {
+      "id": "20",
+      "name": "Hub USB-C 7-en-11",
+      "description": "HDMI, USB 3.0 et lecteur SD integres",
+      "price": 80,
+      "categoryId": 10,
+      "stock": 15,
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&h=400&fit=crop"
+    }
+  ],
+  "orders": [
+    {
+      "id": "1",
+      "userId": 2,
+      "status": "confirmed",
+      "totalAmount": 1399.98,
+      "items": [
+        {
+          "productId": 1,
+          "productName": "Laptop Dell XPS 13",
+          "price": 1299.99,
+          "quantity": 1
+        },
+        {
+          "productId": 6,
+          "productName": "Souris Logitech MX Master",
+          "price": 99.99,
+          "quantity": 1
+        }
+      ],
+      "createdAt": "2026-03-02T10:30:00.000Z"
+    },
+    {
+      "id": "2",
+      "userId": 2,
+      "status": "pending",
+      "totalAmount": 219.98,
+      "items": [
+        {
+          "productId": 7,
+          "productName": "SSD Samsung 990 Pro 1TB",
+          "price": 119.99,
+          "quantity": 1
+        },
+        {
+          "productId": 9,
+          "productName": "Casque HyperX Cloud II",
+          "price": 99.99,
+          "quantity": 1
+        }
+      ],
+      "createdAt": "2026-03-03T14:45:00.000Z"
+    },
+    {
+      "id": "0",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 99.99,
+      "items": [
+        {
+          "productId": "6",
+          "productName": "Souris Logitech MX Master",
+          "price": 99.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-04T08:29:45.400Z"
+    },
+    {
+      "id": "0",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 1299.99,
+      "items": [
+        {
+          "productId": "1",
+          "productName": "Laptop Dell XPS 135",
+          "price": 1299.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-04T08:30:14.777Z"
+    },
+    {
+      "id": "f391",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 1299.99,
+      "items": [
+        {
+          "productId": "1",
+          "productName": "Laptop Dell XPS 135",
+          "price": 1299.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-04T08:37:59.792Z"
+    },
+    {
+      "id": "2211",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 1299.99,
+      "items": [
+        {
+          "productId": "1",
+          "productName": "Laptop Dell XPS 135",
+          "price": 1299.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-04T08:40:45.483Z"
+    },
+    {
+      "id": "16ba",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 11999.949999999999,
+      "items": [
+        {
+          "productId": "2",
+          "productName": "MacBook Pro 14",
+          "price": 2399.99,
+          "quantity": 5,
+          "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-04T08:43:40.475Z"
+    },
+    {
+      "id": "b210",
+      "status": "pending",
+      "userId": 2,
+      "totalAmount": 12.99,
+      "items": [
+        {
+          "price": 12.99,
+          "productName": "Test Product",
+          "productId": 1,
+          "quantity": 1
+        }
+      ],
+      "createdAt": "2026-05-04T09:46:36.7686814+01:00"
+    },
+    {
+      "id": "d960",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 699.99,
+      "items": [
+        {
+          "productId": "3",
+          "productName": "AMD Ryzen 9 7950X",
+          "price": 699.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1591799265444-d66432b91588?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-04T08:59:19.610Z"
+    },
+    {
+      "id": "c9d8",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 299.96999999999997,
+      "items": [
+        {
+          "productId": "6",
+          "productName": "Souris Logitech MX Master",
+          "price": 99.99,
+          "quantity": 3,
+          "image": "https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-06T10:11:47.026Z"
+    },
+    {
+      "id": "bfb5",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 7199.969999999999,
+      "items": [
+        {
+          "productId": "2",
+          "productName": "MacBook Pro 14",
+          "price": 2399.99,
+          "quantity": 3,
+          "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-10T13:52:00.255Z"
+    },
+    {
+      "id": "ea93",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 1199.99,
+      "items": [
+        {
+          "productId": "4",
+          "productName": "NVIDIA RTX 4080",
+          "price": 1199.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-10T13:53:15.118Z"
+    },
+    {
+      "id": "5d2d",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 2399.99,
+      "items": [
+        {
+          "productId": "2",
+          "productName": "MacBook Pro 14",
+          "price": 2399.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-10T13:56:55.936Z"
+    },
+    {
+      "id": "0903",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 299.96999999999997,
+      "items": [
+        {
+          "productId": "9",
+          "productName": "Casque HyperX Cloud II",
+          "price": 99.99,
+          "quantity": 3,
+          "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-10T13:57:18.190Z"
+    },
+    {
+      "id": "a702",
+      "userId": "2",
+      "status": "pending",
+      "totalAmount": 699.99,
+      "items": [
+        {
+          "productId": "3",
+          "productName": "AMD Ryzen 9 7950X",
+          "price": 699.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1591799265444-d66432b91588?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-10T15:38:18.369Z"
+    },
+    {
+      "id": "f561",
+      "userId": "2",
+      "status": "confirmed",
+      "totalAmount": 1299.99,
+      "items": [
+        {
+          "productId": "1",
+          "productName": "Laptop Dell XPS 135",
+          "price": 1299.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-10T15:53:06.345Z"
+    },
+    {
+      "id": "37c1",
+      "userId": "2",
+      "status": "confirmed",
+      "totalAmount": 1199.99,
+      "items": [
+        {
+          "productId": "4",
+          "productName": "NVIDIA RTX 4080",
+          "price": 1199.99,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=600&h=400&fit=crop"
+        }
+      ],
+      "createdAt": "2026-05-10T16:21:15.184Z"
+    }
+  ]
+}

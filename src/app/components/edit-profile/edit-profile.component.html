@@ -1,0 +1,266 @@
+<div class="edit-profile-container">
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="nav-left navbar-brand">
+        <mat-icon class="brand-icon-mat">edit</mat-icon>
+        <h1>Modifier mon Profil</h1>
+      </div>
+      <div class="nav-center">
+        <span class="nav-center-title">Sécurité et Image de Profil</span>
+      </div>
+      <div class="nav-right nav-buttons">
+        <button (click)="goBack()" class="btn btn-secondary btn-sm d-flex align-items-center gap-2">
+          <mat-icon class="btn-icon-mat" aria-hidden="true">arrow_back</mat-icon>
+          <span>Retour</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="edit-profile-content">
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="alert-icon">check_circle</mat-icon>
+        <span>{{ successMessage }}</span>
+      </div>
+      <button type="button" class="btn-close" (click)="successMessage = ''" aria-label="Close"></button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="alert-icon">error</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+      <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <!-- Profile Image Card -->
+          <div class="edit-card profile-image-card">
+            <div class="card-header-custom image-header">
+              <h4>
+                <mat-icon class="header-icon">image</mat-icon>
+                Photo de Profil
+              </h4>
+              <p class="text-muted">Personnalisez votre avatar</p>
+            </div>
+
+            <div class="card-body image-body">
+              <!-- Image Preview -->
+              <div class="image-preview-container">
+                <div class="image-preview">
+                  <img 
+                    *ngIf="imagePreview" 
+                    [src]="imagePreview" 
+                    alt="Aperçu du profil"
+                    class="preview-image">
+                  <div *ngIf="!imagePreview" class="preview-placeholder">
+                    <mat-icon class="placeholder-icon">person</mat-icon>
+                    <p>Pas d'image</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Upload Area -->
+              <div class="upload-section">
+                <input
+                  type="file"
+                  #fileInput
+                  (change)="onImageSelected($event)"
+                  accept="image/*"
+                  class="file-input"
+                  hidden />
+                
+                <button
+                  type="button"
+                  (click)="fileInput.click()"
+                  class="btn btn-primary btn-upload">
+                  <mat-icon class="btn-upload-icon">cloud_upload</mat-icon>
+                  <span>Charger une image</span>
+                </button>
+
+                <div class="upload-info">
+                  <p class="info-text">
+                    <mat-icon class="info-icon">info</mat-icon>
+                    Formats acceptés: JPG, PNG (Max. 5MB)
+                  </p>
+                </div>
+
+                <button
+                  *ngIf="imagePreview"
+                  type="button"
+                  (click)="removeImage()"
+                  class="btn btn-outline-danger btn-remove">
+                  <mat-icon class="btn-icon">delete</mat-icon>
+                  <span>Supprimer l'image</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email Card -->
+          <div class="edit-card email-card">
+            <div class="card-header-custom">
+              <h4>
+                <mat-icon class="header-icon">mail</mat-icon>
+                Adresse Email
+              </h4>
+            </div>
+
+            <div class="card-body">
+              <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+                <div class="form-group mb-3">
+                  <label for="email" class="form-label">
+                    <mat-icon class="form-icon">mail</mat-icon>
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="form-control"
+                    formControlName="email"
+                    placeholder="votre.email@exemple.com"
+                    [class.is-invalid]="submitted && f['email'].errors" />
+                  <div *ngIf="submitted && f['email'].errors" class="invalid-feedback d-block">
+                    <div *ngIf="f['email'].errors['required']">
+                      <mat-icon class="error-icon-small">warning</mat-icon>
+                      L'email est requis
+                    </div>
+                    <div *ngIf="f['email'].errors['email']">
+                      <mat-icon class="error-icon-small">warning</mat-icon>
+                      Format d'email invalide
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Password Section Toggle -->
+                <div class="password-toggle-section">
+                  <button
+                    type="button"
+                    (click)="togglePasswordFields()"
+                    class="btn btn-outline-primary w-100">
+                    <mat-icon class="toggle-icon">{{ showPasswordFields ? 'expand_less' : 'expand_more' }}</mat-icon>
+                    <span>{{ showPasswordFields ? 'Masquer' : 'Modifier le mot de passe' }}</span>
+                  </button>
+                </div>
+
+                <!-- Password Fields (Collapsible) -->
+                <div *ngIf="showPasswordFields" class="password-section">
+                  <!-- Current Password -->
+                  <div class="form-group mb-3">
+                    <label for="currentPassword" class="form-label">
+                      <mat-icon class="form-icon">lock</mat-icon>
+                      Mot de passe courant
+                    </label>
+                    <div class="password-input-group">
+                      <input
+                        [type]="showPasswordToggle ? 'text' : 'password'"
+                        id="currentPassword"
+                        class="form-control"
+                        formControlName="currentPassword"
+                        placeholder="Entrez votre mot de passe actuel"
+                        [class.is-invalid]="submitted && !editForm.get('currentPassword')?.value && showPasswordFields" />
+                      <button
+                        type="button"
+                        (click)="togglePasswordVisibility('password')"
+                        class="btn-toggle-visibility">
+                        <mat-icon class="toggle-eye-icon">{{ showPasswordToggle ? 'visibility_off' : 'visibility' }}</mat-icon>
+                      </button>
+                    </div>
+                    <div *ngIf="submitted && !editForm.get('currentPassword')?.value && showPasswordFields" class="invalid-feedback d-block">
+                      <mat-icon class="error-icon-small">warning</mat-icon>
+                      Le mot de passe courant est requis
+                    </div>
+                  </div>
+
+                  <!-- New Password -->
+                  <div class="form-group mb-3">
+                    <label for="newPassword" class="form-label">
+                      <mat-icon class="form-icon">lock_outline</mat-icon>
+                      Nouveau mot de passe
+                    </label>
+                    <input
+                      type="password"
+                      id="newPassword"
+                      class="form-control"
+                      formControlName="newPassword"
+                      placeholder="Minimum 6 caractères"
+                      [class.is-invalid]="submitted && f['newPassword'].errors" />
+                    <div *ngIf="submitted && f['newPassword'].errors" class="invalid-feedback d-block">
+                      <div *ngIf="f['newPassword'].errors['minlength']">
+                        <mat-icon class="error-icon-small">warning</mat-icon>
+                        Minimum 6 caractères requis
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Confirm Password -->
+                  <div class="form-group mb-3">
+                    <label for="confirmPassword" class="form-label">
+                      <mat-icon class="form-icon">lock</mat-icon>
+                      Confirmer le mot de passe
+                    </label>
+                    <div class="password-input-group">
+                      <input
+                        [type]="showConfirmPasswordToggle ? 'text' : 'password'"
+                        id="confirmPassword"
+                        class="form-control"
+                        formControlName="confirmPassword"
+                        placeholder="Confirmez le nouveau mot de passe"
+                        [class.is-invalid]="submitted && (f['confirmPassword'].errors || editForm.errors?.['passwordMismatch'])" />
+                      <button
+                        type="button"
+                        (click)="togglePasswordVisibility('confirm')"
+                        class="btn-toggle-visibility">
+                        <mat-icon class="toggle-eye-icon">{{ showConfirmPasswordToggle ? 'visibility_off' : 'visibility' }}</mat-icon>
+                      </button>
+                    </div>
+                    <div *ngIf="submitted && (f['confirmPassword'].errors || editForm.errors?.['passwordMismatch'])" class="invalid-feedback d-block">
+                      <mat-icon class="error-icon-small">warning</mat-icon>
+                      Les mots de passe ne correspondent pas
+                    </div>
+                  </div>
+
+                  <div class="password-requirements">
+                    <h6>
+                      <mat-icon class="requirement-icon">check_circle_outline</mat-icon>
+                      Exigences du mot de passe
+                    </h6>
+                    <ul>
+                      <li [class.met]="editForm.get('newPassword')?.value?.length >= 6">
+                        <mat-icon class="requirement-check">{{ editForm.get('newPassword')?.value?.length >= 6 ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                        Au moins 6 caractères
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions mt-4">
+                  <button
+                    type="submit"
+                    [disabled]="loading"
+                    class="btn btn-primary btn-save">
+                    <span *ngIf="!loading" class="d-flex align-items-center justify-content-center gap-2">
+                      <mat-icon class="btn-action-icon">save</mat-icon>
+                      Enregistrer les modifications
+                    </span>
+                    <span *ngIf="loading" class="d-flex align-items-center justify-content-center gap-2">
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Enregistrement en cours...
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

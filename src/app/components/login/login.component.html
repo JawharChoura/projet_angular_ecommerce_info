@@ -1,0 +1,71 @@
+<div class="login-container">
+  <app-site-navbar></app-site-navbar>
+  <div class="login-box pro-shadow">
+    <div class="logo-section">
+      <div class="icon">
+        <span class="material-icons" style="font-size:48px;color:var(--pro-primary);">engineering</span>
+      </div>
+      <h1>E-Commerce Informatique</h1>
+      <h2>Connexion Ingénieur</h2>
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="on">
+      <div class="form-group">
+        <label for="email">
+          <span class="material-icons icon-label">mail</span>
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="prenom.nom@entreprise.com"
+          [class.is-invalid]="submitted && f['email'].errors"
+          autocomplete="username" />
+        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+          <div *ngIf="f['email'].errors['required']">L'email est requis</div>
+          <div *ngIf="f['email'].errors['email']">Format d'email invalide</div>
+        </div>
+      </div>
+      <div class="form-group password-group">
+        <label for="password">
+          <span class="material-icons icon-label">lock</span>
+          Mot de passe
+        </label>
+        <div class="password-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="••••••••"
+            [class.is-invalid]="submitted && f['password'].errors"
+            autocomplete="current-password" />
+          <span class="material-icons password-toggle" (click)="togglePasswordVisibility()" [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'" tabindex="0">
+            {{ showPassword ? 'visibility_off' : 'visibility' }}
+          </span>
+        </div>
+        <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+          <div *ngIf="f['password'].errors['required']">Le mot de passe est requis</div>
+          <div *ngIf="f['password'].errors['minlength']">Minimum 6 caractères</div>
+        </div>
+      </div>
+      <div class="form-group remember-me">
+        <input type="checkbox" id="rememberMe" />
+        <label for="rememberMe">Se souvenir de moi</label>
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        <span class="material-icons alert-icon">error_outline</span>
+        {{ errorMessage }}
+      </div>
+      <button type="submit" [disabled]="loading" class="btn btn-primary pro-btn">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+        {{ loading ? 'Connexion en cours...' : 'Se connecter' }}
+      </button>
+    </form>
+    <div class="register-link">
+      <p>Vous n'avez pas de compte ? <a routerLink="/register" class="link">Créer un compte</a></p>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,91 @@
+<div class="admin-container">
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="nav-left navbar-brand">
+        <span class="brand-icon">🛒</span>
+        <h1>{{ t('adminDashboard') }}</h1>
+      </div>
+      <div class="nav-center">
+        <a [class.active]="activeTab === 'orders'" class="nav-pill" [routerLink]="['/admin','orders']"><span class="nav-pill-icon">📦</span>{{ t('tabOrders') }}</a>
+        <a [class.active]="activeTab === 'products'" class="nav-pill" [routerLink]="['/admin','products']"><span class="nav-pill-icon">📋</span>{{ t('tabProducts') }}</a>
+        <a [class.active]="activeTab === 'categories'" class="nav-pill" [routerLink]="['/admin','categories']"><span class="nav-pill-icon">📁</span>{{ t('tabCategories') }}</a>
+      </div>
+      <div class="nav-right">
+        <div class="dropdown nav-dropdown language-dropdown">
+          <button type="button" class="nav-action-btn language-trigger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('changeLanguage')">
+            <mat-icon class="nav-action-icon" aria-hidden="true">public</mat-icon>
+            <span class="nav-action-label">{{ selectedLanguage.toUpperCase() }}</span>
+            <mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-language-dropdown">
+            <li *ngFor="let language of languageOptions"><button type="button" class="dropdown-item app-dropdown-item" (click)="onLanguageChange(language.code)" [class.active-language]="selectedLanguage === language.code"><span class="language-flag">{{ getFlag(language.code) }}</span><span class="language-native">{{ language.nativeLabel }}</span><span class="language-menu-spacer"></span><span *ngIf="selectedLanguage === language.code" class="language-check-icon">✓</span></button></li>
+          </ul>
+        </div>
+        <div class="dropdown nav-dropdown profile-dropdown">
+          <button class="nav-action-btn profile-trigger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('profile')"><span class="user-avatar">👤</span><span class="nav-action-label user-display-name">{{ currentUser?.name }}</span><mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon></button>
+          <ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-user-dropdown">
+            <li class="dropdown-header user-menu-header"><span class="user-avatar large">👤</span><div class="user-info"><div class="user-name">{{ currentUser?.name }}</div><div class="user-email">{{ currentUser?.email }}</div></div></li>
+            <li><button type="button" class="dropdown-item app-dropdown-item" (click)="goToProfile()"><span class="dropdown-item-icon">👤</span><span>{{ t('profile') }}</span></button></li>
+            <li><button type="button" class="dropdown-item app-dropdown-item logout-item" (click)="logout()"><span class="dropdown-item-icon">🚪</span><span>{{ t('logout') }}</span></button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="statistics-section">
+    <div class="stats-grid">
+      <div class="stat-card stat-card-blue"><div class="stat-icon">📦</div><div class="stat-content"><h3>{{ getTotalOrders() }}</h3><p>Total Commandes</p></div></div>
+      <div class="stat-card stat-card-green"><div class="stat-icon">💰</div><div class="stat-content"><h3>{{ getTotalRevenue() | currency }}</h3><p>Revenu Total</p></div></div>
+      <div class="stat-card stat-card-orange"><div class="stat-icon">📋</div><div class="stat-content"><h3>{{ getTotalProducts() }}</h3><p>Total Produits</p></div></div>
+      <div class="stat-card stat-card-purple"><div class="stat-icon">📁</div><div class="stat-content"><h3>{{ getTotalCategories() }}</h3><p>Catégories</p></div></div>
+    </div>
+    <div class="quick-stats">
+      <div class="quick-stat"><span class="quick-stat-icon">⏳</span><span class="quick-stat-label">{{ t('quickPending') }}</span><span class="quick-stat-value">{{ getPendingOrders() }}</span></div>
+      <div class="quick-stat"><span class="quick-stat-icon">⚠️</span><span class="quick-stat-label">{{ t('quickLowStock') }}</span><span class="quick-stat-value">{{ getLowStockProducts() }}</span></div>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <div class="section-header">
+      <h2><span class="section-icon">📋</span>Gestion des Produits</h2>
+      <button (click)="showAddProductForm = !showAddProductForm" class="btn btn-primary"><span class="btn-icon">{{ showAddProductForm ? '✕' : '+' }}</span>{{ showAddProductForm ? 'Annuler' : 'Ajouter un Produit' }}</button>
+    </div>
+
+    <div class="chart-container" *ngIf="barChartData.labels && barChartData.labels.length > 0"><div class="chart-header"><h3 style="margin-top: 0;">📊 Purchases by Product</h3></div><canvas baseChart [data]="barChartData" type="bar" [options]="barChartOptions"></canvas></div>
+
+    <div *ngIf="showAddProductForm" class="form-section">
+      <div class="form-header"><h3>✨ Ajouter un nouveau produit</h3></div>
+      <div class="form-grid">
+        <div class="form-group"><label>Nom du produit</label><input type="text" [(ngModel)]="newProduct.name" class="form-control" placeholder="Ex: PC Portable" /></div>
+        <div class="form-group"><label>Prix (€)</label><input type="number" [(ngModel)]="newProduct.price" class="form-control" placeholder="999.99" /></div>
+        <div class="form-group"><label>Stock disponible</label><input type="number" [(ngModel)]="newProduct.stock" class="form-control" placeholder="50" /></div>
+        <div class="form-group"><label>Catégorie</label><select [(ngModel)]="newProduct.categoryId" class="form-control"><option [ngValue]="0">Sélectionner une catégorie</option><option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option></select></div>
+      </div>
+      <div class="form-group"><label>Description</label><textarea [(ngModel)]="newProduct.description" class="form-control" rows="3" placeholder="Description détaillée du produit..."></textarea></div>
+      <div class="form-group"><label>Image produit (import local)</label><input #newProductImageInput type="file" accept="image/*" class="form-control file-input-control" (change)="onNewProductImageSelected($event)" /><small class="input-helper">Choisissez une image depuis votre machine pour le catalogue client.</small></div>
+      <div *ngIf="newProduct.image?.trim()" class="new-product-image-preview"><img [src]="newProduct.image" alt="Aperçu du nouveau produit" /><div class="preview-meta"><span>Aperçu image importée</span><button type="button" class="btn btn-sm btn-secondary btn-image-remove" (click)="clearNewProductImage(newProductImageInput)">Retirer</button></div></div>
+      <button (click)="addProduct()" class="btn btn-success"><span class="btn-icon">✓</span>Ajouter le produit</button>
+    </div>
+
+    <div class="table-container"><table class="table"><thead><tr><th>ID</th><th>Nom</th><th>Prix</th><th>Stock</th><th>Catégorie</th><th>Action</th></tr></thead><tbody><tr *ngFor="let product of products"><td><span class="id-badge">#{{ product.id }}</span></td><td class="product-name">{{ product.name }}</td><td class="amount">{{ product.price | currency }}</td><td><span [class]="product.stock < 5 ? 'stock-low' : 'stock-ok'">{{ product.stock }} unités</span></td><td>{{ getCategoryName(product.categoryId) }}</td><td class="action-buttons"><button (click)="editProduct(product)" class="btn btn-sm btn-primary" title="Modifier">✏️ Modifier</button><button (click)="deleteProduct(product.id)" class="btn btn-sm btn-danger" title="Supprimer">🗑️ Supprimer</button></td></tr></tbody></table></div>
+  </div>
+
+  <div *ngIf="showEditProductForm" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header"><h3>Modifier le produit</h3><button (click)="cancelEditProduct()" class="close-btn">✕</button></div>
+      <form *ngIf="editingProduct" class="edit-form" novalidate>
+        <div class="form-group"><label>Nom du produit:</label><input type="text" [(ngModel)]="editingProduct.name" name="name" class="form-control" required /></div>
+        <div class="form-group"><label>Description:</label><textarea [(ngModel)]="editingProduct.description" name="description" class="form-control"></textarea></div>
+        <div class="form-group"><label>Prix:</label><input type="number" [(ngModel)]="editingProduct.price" name="price" class="form-control" required /></div>
+        <div class="form-group"><label>Catégorie:</label><select [(ngModel)]="editingProduct.categoryId" name="categoryId" class="form-control" required><option [ngValue]="null">-- Sélectionner une catégorie --</option><option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option></select></div>
+        <div class="form-group"><label>Stock:</label><input type="number" [(ngModel)]="editingProduct.stock" name="stock" class="form-control" required /></div>
+        <div class="form-group"><label>Image du produit (import local):</label><input #editingProductImageInput type="file" accept="image/*" class="form-control file-input-control" (change)="onEditingProductImageSelected($event)" /><small class="input-helper">Vous pouvez changer l'image du produit avec un fichier local.</small></div>
+        <div *ngIf="editingProduct.image?.trim()" class="new-product-image-preview"><img [src]="editingProduct.image" alt="Apercu de l'image du produit" /><div class="preview-meta"><span>Apercu image actuelle</span><button type="button" class="btn btn-sm btn-secondary btn-image-remove" (click)="clearEditingProductImage(editingProductImageInput)">Retirer</button></div></div>
+        <div class="modal-actions"><button type="button" (click)="saveProductChanges()" class="btn btn-primary">✅ Enregistrer</button><button type="button" (click)="cancelEditProduct()" class="btn btn-secondary">❌ Annuler</button></div>
+      </form>
+    </div>
+  </div>
+
+  <app-site-footer></app-site-footer>
+</div>

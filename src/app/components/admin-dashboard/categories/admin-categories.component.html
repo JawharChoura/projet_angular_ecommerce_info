@@ -1,0 +1,42 @@
+<div class="admin-container">
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="nav-left navbar-brand"><span class="brand-icon">🛒</span><h1>{{ t('adminDashboard') }}</h1></div>
+      <div class="nav-center">
+        <a [class.active]="activeTab === 'orders'" class="nav-pill" [routerLink]="['/admin','orders']"><span class="nav-pill-icon">📦</span>{{ t('tabOrders') }}</a>
+        <a [class.active]="activeTab === 'products'" class="nav-pill" [routerLink]="['/admin','products']"><span class="nav-pill-icon">📋</span>{{ t('tabProducts') }}</a>
+        <a [class.active]="activeTab === 'categories'" class="nav-pill" [routerLink]="['/admin','categories']"><span class="nav-pill-icon">📁</span>{{ t('tabCategories') }}</a>
+      </div>
+      <div class="nav-right">
+        <div class="dropdown nav-dropdown language-dropdown">
+          <button type="button" class="nav-action-btn language-trigger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('changeLanguage')"><mat-icon class="nav-action-icon" aria-hidden="true">public</mat-icon><span class="nav-action-label">{{ selectedLanguage.toUpperCase() }}</span><mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon></button>
+          <ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-language-dropdown"><li *ngFor="let language of languageOptions"><button type="button" class="dropdown-item app-dropdown-item" (click)="onLanguageChange(language.code)" [class.active-language]="selectedLanguage === language.code"><span class="language-flag">{{ getFlag(language.code) }}</span><span class="language-native">{{ language.nativeLabel }}</span><span class="language-menu-spacer"></span><span *ngIf="selectedLanguage === language.code" class="language-check-icon">✓</span></button></li></ul>
+        </div>
+        <div class="dropdown nav-dropdown profile-dropdown">
+          <button class="nav-action-btn profile-trigger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" [attr.title]="t('profile')"><span class="user-avatar">👤</span><span class="nav-action-label user-display-name">{{ currentUser?.name }}</span><mat-icon class="nav-action-chevron" aria-hidden="true">expand_more</mat-icon></button>
+          <ul class="dropdown-menu dropdown-menu-end app-dropdown-menu app-user-dropdown"><li class="dropdown-header user-menu-header"><span class="user-avatar large">👤</span><div class="user-info"><div class="user-name">{{ currentUser?.name }}</div><div class="user-email">{{ currentUser?.email }}</div></div></li><li><button type="button" class="dropdown-item app-dropdown-item" (click)="goToProfile()"><span class="dropdown-item-icon">👤</span><span>{{ t('profile') }}</span></button></li><li><button type="button" class="dropdown-item app-dropdown-item logout-item" (click)="logout()"><span class="dropdown-item-icon">🚪</span><span>{{ t('logout') }}</span></button></li></ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="statistics-section">
+    <div class="stats-grid">
+      <div class="stat-card stat-card-blue"><div class="stat-icon">📦</div><div class="stat-content"><h3>{{ getTotalOrders() }}</h3><p>Total Commandes</p></div></div>
+      <div class="stat-card stat-card-green"><div class="stat-icon">💰</div><div class="stat-content"><h3>{{ getTotalRevenue() | currency }}</h3><p>Revenu Total</p></div></div>
+      <div class="stat-card stat-card-orange"><div class="stat-icon">📋</div><div class="stat-content"><h3>{{ getTotalProducts() }}</h3><p>Total Produits</p></div></div>
+      <div class="stat-card stat-card-purple"><div class="stat-icon">📁</div><div class="stat-content"><h3>{{ getTotalCategories() }}</h3><p>Catégories</p></div></div>
+    </div>
+    <div class="quick-stats"><div class="quick-stat"><span class="quick-stat-icon">⏳</span><span class="quick-stat-label">{{ t('quickPending') }}</span><span class="quick-stat-value">{{ getPendingOrders() }}</span></div><div class="quick-stat"><span class="quick-stat-icon">⚠️</span><span class="quick-stat-label">{{ t('quickLowStock') }}</span><span class="quick-stat-value">{{ getLowStockProducts() }}</span></div></div>
+  </div>
+
+  <div class="content-section">
+    <div class="section-header"><h2><span class="section-icon">📁</span>Gestion des Catégories</h2><button (click)="showAddCategoryForm = !showAddCategoryForm" class="btn btn-primary"><span class="btn-icon">{{ showAddCategoryForm ? '✕' : '+' }}</span>{{ showAddCategoryForm ? 'Annuler' : 'Ajouter une Catégorie' }}</button></div>
+    <div *ngIf="showAddCategoryForm" class="form-section"><div class="form-header"><h3>✨ Ajouter une nouvelle catégorie</h3></div><div class="form-group"><label>Nom de la catégorie</label><input type="text" [(ngModel)]="newCategory.name" class="form-control" placeholder="Ex: Ordinateurs portables" /></div><div class="form-group"><label>Description</label><textarea [(ngModel)]="newCategory.description" class="form-control" rows="3" placeholder="Description de la catégorie..."></textarea></div><button (click)="addCategory()" class="btn btn-success"><span class="btn-icon">✓</span>Ajouter la catégorie</button></div>
+    <div class="table-container"><table class="table"><thead><tr><th>ID</th><th>Nom</th><th>Description</th><th>Action</th></tr></thead><tbody><tr *ngFor="let category of categories"><td><span class="id-badge">#{{ category.id }}</span></td><td class="category-name">{{ category.name }}</td><td>{{ category.description }}</td><td class="action-buttons"><button (click)="editCategory(category)" class="btn btn-sm btn-primary" title="Modifier">✏️ Modifier</button><button (click)="deleteCategory(category.id)" class="btn btn-sm btn-danger" title="Supprimer">🗑️ Supprimer</button></td></tr></tbody></table></div>
+  </div>
+
+  <div *ngIf="showEditCategoryForm" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Modifier la catégorie</h3><button (click)="cancelEditCategory()" class="close-btn">✕</button></div><form *ngIf="editingCategory" class="edit-form" novalidate><div class="form-group"><label>Nom de la catégorie:</label><input type="text" [(ngModel)]="editingCategory.name" name="name" class="form-control" required /></div><div class="form-group"><label>Description:</label><textarea [(ngModel)]="editingCategory.description" name="description" class="form-control"></textarea></div><div class="modal-actions"><button type="button" (click)="saveCategoryChanges()" class="btn btn-primary">✅ Enregistrer</button><button type="button" (click)="cancelEditCategory()" class="btn btn-secondary">❌ Annuler</button></div></form></div></div>
+
+  <app-site-footer></app-site-footer>
+</div>
